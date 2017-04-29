@@ -12,35 +12,49 @@
         <p>{{toCity}}</p>
       </div>
     </div>
+    <citysearch v-if='showcity' :serchtype="searhType" @closeCity="closeCity"></citysearch>
   </div>
 </template>
 
 <script>
 import router from '@/router'
+import city from '@/components/getCity'
+
 export default {
   name: 'home',
   data () {
     return {
-      fromCity: '平凉',
+      fromCity: '出发城市',
       date: '5月12日',
-      toCity: '平凉南',
-      rlink: ''
+      toCity: '到达城市',
+      showcity: false,
+      searhType:''
     }
   },
   mounted () {
-    let searhType = this.$route.params.type,
-        searchCity = this.$route.params.cName;
-    if(searhType){
-      searhType == 'from' ? this.fromCity =  searchCity : this.toCity = searchCity;
-    }
+    // let searhType = this.$route.params.type,
+    //     searchCity = this.$route.params.cName;
+    // if(searhType){
+    //   searhType == 'from' ? this.fromCity =  searchCity : this.toCity = searchCity;
+    // }
   },
   methods: {
-    getCity:function(type){
-      router.push({ name: 'getcity',params:{type:type}})
+    getCity: function(type){
+      this.searhType = type;
+      this.showcity = true;
     },
-    searchClick:function(){
+    closeCity: function(type,cname){
+      if(type&&cname)
+        type == "from" ? this.fromCity = cname:this.toCity = cname;
+      
+      this.showcity = false;
+    },
+    searchClick: function(){
       router.push({ name: 'trainlist',params: { from:this.fromCity,to:this.toCity,date:this.date}})
     }
+  },
+  components: {
+    'citysearch':city
   }
 }
 </script>

@@ -14,7 +14,8 @@
 import router from '@/router'
 var $ = window.$;
 export default {
-  name: 'city',
+  name: 'citycom',
+  props: ['serchtype'],
   data () {
       return {
         cityList: [],
@@ -62,15 +63,23 @@ export default {
     },
     backToHome: function(cName){
       if(cName){
-        router.push({ name: 'index' , params: { type:this.$route.params.type,cName:cName}})
+        this.$emit('closeCity',this.serchtype,cName)
       }else
-        router.push({ name: 'index'})
+        this.$emit('closeCity')
     }
   }
 }
 </script>
 
 <style scoped>
+  #citylist{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+  }
   .city-item {
       background: #eee;
       border-bottom: 1px solid #dcdcdc;
