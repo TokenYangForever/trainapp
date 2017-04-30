@@ -52,8 +52,13 @@ export default {
           },
           dataType: 'JSONP',
           success: function (data) {
-            _this.cityList = data.TrainStation.StationList;
-            _this.searchmsg = "";
+            console.log(data);
+            if(data.State == 100){
+              _this.cityList = data.TrainStation.StationList;
+              _this.searchmsg = ""; 
+            }else{
+              //请求无结果
+            }
           }
       });
 

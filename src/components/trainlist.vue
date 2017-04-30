@@ -15,7 +15,7 @@ export default {
   },
   mounted () {
     this.axios({
-      url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
+      url:'http://wx.17u.cn/uniontrain/trainapi/searchno.html',
       params: {
         para: {
           "from":this.queryData.from,
