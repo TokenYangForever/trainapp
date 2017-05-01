@@ -1,5 +1,6 @@
 <template>
   <div class="trainDateInfo">
+
     <div class="TrainBox">
       <div class="depart flex1">
         <div class="bTime">{{traindata.fmtime}}</div> 
@@ -13,8 +14,12 @@
         <div class="eTime">{{traindata.totime}}</div>
         <div class="aStation">{{traindata.tocity}}</div>
       </div> <div class="leastMoney flex1">
-        <span class="adjust canRobTickets"><span class="money">66</span>起</span>
+        <span class="adjust canRobTickets"><span class="money">{{this.getleast()}}</span>起</span>
       </div>
+    </div>
+
+    <div class="seats">
+      <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span> 
     </div>
   </div>
 </template>
@@ -26,11 +31,24 @@ export default {
   props: ['traindata'],
   data () {
     return {
+      openseat: false,
     }
   },
   mounted () {
   },
   methods: {
+    getleast: function(){
+      var tickets = this.traindata.ticketstatus,
+          least = 9999,
+          keys = [];
+      for(let key in tickets){  
+          let nticket = tickets[key];
+          if(nticket&&nticket.price){
+            least = nticket.price<least ? nticket.price : least;
+          }
+      }
+      return least;
+    }
   }
 }
 </script>
@@ -38,8 +56,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .cTime {
-      color: #999;
-      margin-top: 7px;
+    color: #999;
+    margin-top: 7px;
   }
   .rightArrow {
     margin-left: -30px;
@@ -89,5 +107,19 @@ export default {
     line-height: 51px;
     font-size: 12px;
     color: #999;
+  }
+  .seats {
+    padding-left: 8px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    background-color: #f9f9f9;
+    color: #666;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .seat {
+    margin-left: 8px;
+    float: left;
   }
 </style>

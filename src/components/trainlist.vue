@@ -28,7 +28,7 @@ export default {
           "from":_this.queryData.from,
           "to":_this.queryData.to,
           "oby":"0",
-          "date":new Date().format('yyyy-MM-dd'),
+          "date":"2017-05-20",
           "platId":501,
           "requestType":4,
           "headct":1,
@@ -56,7 +56,6 @@ export default {
             _this.noresult = true;
           }
         }
-        console.log(data);
       }
     });
   },
