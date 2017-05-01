@@ -16,6 +16,7 @@ export default {
 
 <style>
 *{
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
@@ -34,5 +35,21 @@ export default {
 }
 .flexBox{
     display: flex;
+}
+html{
+    color: #2d2d2d;
+    background: #f2f4f7;
+    -webkit-text-size-adjust: 100%!important;
+    -ms-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.icon-train{
+    background-size: 320px;
+    background-image: url(//wx.40017.cn/touch/weixin/train/img/icon1-fs8-1216.png);
 }
 </style>

@@ -7,64 +7,53 @@
       <span class="cancel" @click="backToHome()">取消</span>
     </div>
     <div class='city-item' v-for="(item, index) in cityList" @click="backToHome(item.Name)">{{item.Name}}</div>
+    <div class="noresult" v-if="noresult">对不起，找不到{{this.searchmsg}}</div>
   </div>
 </template>
 
 <script>
 import router from '@/router'
-var $ = window.$;
+const $ = window.$;
 export default {
   name: 'citycom',
   props: ['serchtype'],
   data () {
       return {
         cityList: [],
-        searchmsg: ''
+        searchmsg: '',
+        noresult: false
       }
   },
   mounted () {
   },
   methods: {
     searchCity: function(){
-      // this.axios({
-      // url:'http://wx.17u.cn/traintest/GetCityListByLetter',
-      // params: {
-      //     allCity:0,
-      //     letter:this.searchmsg
-      // },
-      // dataType: "JSONP",
-      // headers:{'Access-Control-Allow-Origin': 'application/json','X-Requested-With':'XMLHttpRequest'},
-      // timeout:20000
-      // })
-      // .then(function (response) {
-      //   console.log(response);
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
-      var _this = this
+      let _this = this
       $.ajax({
           url: "http://wx.17u.cn/traintest/GetCityListByLetter",
           type: 'GET',
           data:{
             allCity:0,
-            letter:this.searchmsg
+            letter:_this.searchmsg
           },
           dataType: 'JSONP',
           success: function (data) {
-            console.log(data);
             if(data.State == 100){
               _this.cityList = data.TrainStation.StationList;
               _this.searchmsg = ""; 
             }else{
               //请求无结果
+              _this.cityList = [];
+              _this.noresult = true;
             }
           }
       });
 
     },
     clearmsg: function(){
-      this.searchmsg = ""
+      this.searchmsg = "";
+      this.cityList = [];
+      this.noresult = false;
     },
     backToHome: function(cName){
       if(cName){

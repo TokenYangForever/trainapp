@@ -1,27 +1,34 @@
 <template>
   <div id="trainlist">
-    <div>{{ $route.params.from }}</div>
-    <div>{{ $route.params.to }}</div>
+    <div class="header flexBox">
+      <div class="flex1 beforeday"><em class="pre-arrow icon-train"></em>前一天</div>
+      <div class="flex1 choosedate">{{queryData.date}}</div>
+      <div class="flex1 afterday">后一天<em class="arrownext icon-train"></em></div>
+    </div>
+    <div class="trainlist">
+      <traindatainfo v-for="item in datatrainlist" :traindata="item"></traindatainfo>
+    </div>
   </div>
 </template>
 
 <script>
+import train from '@/components/trainlist/train'
 export default {
   name: 'trainlist',
   data () {
       return {
-        queryData: this.$route.params
+        queryData: this.$route.params,
+        datatrainlist: [],
+        noresult: false
       }
   },
   mounted () {
-    this.axios({
-      url:'http://wx.17u.cn/uniontrain/trainapi/searchno.html',
-      params: {
-        para: {
-          "from":this.queryData.from,
-          "to":this.queryData.to,
+    let _this = this,
+        ajaxdata = {
+          "from":_this.queryData.from,
+          "to":_this.queryData.to,
           "oby":"0",
-          "date":"2017-04-28",
+          "date":new Date().format('yyyy-MM-dd'),
           "platId":501,
           "requestType":4,
           "headct":1,
@@ -31,17 +38,69 @@ export default {
           "headtime":1493112975746,
           "OpenId":"oOCyauGWhshD9C0v9D1VXp9vy6aE",
           "MemberId":"aCmbppvo8AloGHUDB68fxg=="
-        }
+        };
+    window.$.ajax({
+      url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
+      type: 'GET',
+      data:{
+        para:JSON.stringify(ajaxdata) 
       },
-      dataType: "jsonp",
-      timeout:20000
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
+      timeout:  20000,
+      dataType: 'JSON',
+      success: function (data) {
+        if(data&&data.status == 200){
+          data = data.data;
+          if(data.trainlist&&data.trainlist.length>0){
+            _this.datatrainlist = data.trainlist;
+          }else{
+            _this.noresult = true;
+          }
+        }
+        console.log(data);
+      }
     });
+  },
+  components: {
+    'traindatainfo':train
   }
+  
 }
 </script>
+<style scoped>
+  .beforeday{
+    text-align: left;
+  }
+  .afterday{
+    text-align: right;
+  }
+  .header{
+    line-height: 24px;
+    border-bottom: 1px solid #dcdcdc;
+    background-color: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: auto;
+    padding: 12px;
+    color: #3C6;
+  }
+  .arrownext {
+    width: 14px;
+    height: 14px;
+    background-position: -335px -2px;
+    display: inline-block;
+    vertical-align: 0;
+  }
+  .pre-arrow {
+    width: 14px;
+    height: 14px;
+    background-position: -324px -2px;
+    display: inline-block;
+    margin-right: 4px;
+  }
+  .trainlist{
+    margin-top: 55px;
+  }
+</style>

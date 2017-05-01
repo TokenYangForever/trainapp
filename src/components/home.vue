@@ -25,9 +25,9 @@ export default {
   name: 'home',
   data () {
     return {
-      fromCity: '出发城市',
+      fromCity: '请选择城市',
       date: '5月12日',
-      toCity: '到达城市',
+      toCity: '请选择城市',
       showcity: false,
       searhType: '',
       clickChange: false
@@ -73,15 +73,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.tpic_change {
+  .home{
+    padding-top: 60px;
+    background-color: #fff;
+  }
+  .tpic_change {
     display: block;
     width: 34px;
     height: 34px;
     background-position: 284px -5px;
     background-image: url(//wx.40017.cn/touch/weixin/train/img/common/wxtrain_icon_01.png);
     background-size: 320px;
-}
-.search {
+  }
+  .search {
     background: #09bb07;
     color: #FFF;
     line-height: 44px;
@@ -89,35 +93,32 @@ export default {
     border-radius: 5px;
     font-size: 18px;
     margin: 10px 15px;
-}
-.queryDate {
-    margin-bottom: 20px;
-}
-.home {
-  margin-top: 60px;
-}
-.cityname {
-  font-size: 24px;
-  color: #333;
-}
-.flytoleft {
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-    -ms-transition: all 0.5s ease-in-out 0s;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transform: translateX(-120%);
-    -moz-transform: translateX(-120%);
-    -ms-transform: translateX(-120%);
-    transform: translateX(-120%)
-}
-.flytoright {
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-    -ms-transition: all 0.5s ease-in-out 0s;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transform: translateX(120%);
-    -moz-transform: translateX(120%);
-    -ms-transform: translateX(120%);
-    transform: translateX(120%)
-}
+  }
+  .queryDate {
+      margin-bottom: 20px;
+  }
+  .cityname {
+    font-size: 24px;
+    color: #333;
+  }
+  .flytoleft {
+      -webkit-transition: all 0.5s ease-in-out 0s;
+      -moz-transition: all 0.5s ease-in-out 0s;
+      -ms-transition: all 0.5s ease-in-out 0s;
+      transition: all 0.5s ease-in-out 0s;
+      -webkit-transform: translateX(-120%);
+      -moz-transform: translateX(-120%);
+      -ms-transform: translateX(-120%);
+      transform: translateX(-120%)
+  }
+  .flytoright {
+      -webkit-transition: all 0.5s ease-in-out 0s;
+      -moz-transition: all 0.5s ease-in-out 0s;
+      -ms-transition: all 0.5s ease-in-out 0s;
+      transition: all 0.5s ease-in-out 0s;
+      -webkit-transform: translateX(120%);
+      -moz-transform: translateX(120%);
+      -ms-transform: translateX(120%);
+      transform: translateX(120%)
+  }
 </style>
