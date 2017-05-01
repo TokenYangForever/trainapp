@@ -1,5 +1,5 @@
 <template>
-  <div class="trainDateInfo">
+  <div class="trainDateInfo" @click="toggleseat()">
 
     <div class="TrainBox">
       <div class="depart flex1">
@@ -18,8 +18,19 @@
       </div>
     </div>
 
-    <div class="seats">
+    <div class="seats" v-if="!openseat">
       <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span> 
+    </div>
+    <div class="seatlists" v-else>
+      <div class="seatItem flexBox" v-for="item in traindata.ticketstatus" v-if="item">
+        <div class="flex1">{{item.cn}}</div>
+        <div class="flex1" style="color: #FF6540">￥{{item.price}}</div>
+        <div class="flex1">{{item.seats}}张</div>
+        <div class="flex1">
+          <span v-if="item.seats>0" class="bookTicket">预定</span>
+          <span v-else class="robTicketsBtn">抢票</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +59,9 @@ export default {
           }
       }
       return least;
+    },
+    toggleseat: function(){
+      this.openseat = !this.openseat;
     }
   }
 }
@@ -121,5 +135,36 @@ export default {
   .seat {
     margin-left: 8px;
     float: left;
+  }
+  .seatlists {
+    margin-bottom: 5px;
+    background: #f9f9f9;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 1px 1px rgba(153,153,153,.2);
+    -webkit-box-shadow: 0 1px 1px 1px rgba(153,153,153,.2);
+  }
+  .seatItem {
+    line-height: 51px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    position: relative;
+  }
+  .robTicketsBtn {
+    background-color: #FF6540;
+    color: #fff;
+    padding: 7px 14px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+  }
+  .bookTicket {
+    background: #3c6;
+    color: #fff;
+    padding: 7px 14px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
   }
 </style>

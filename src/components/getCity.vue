@@ -16,7 +16,7 @@ import router from '@/router'
 const $ = window.$;
 export default {
   name: 'citycom',
-  props: ['serchtype'],
+  props: ['serchtype','key'],
   data () {
       return {
         cityList: [],

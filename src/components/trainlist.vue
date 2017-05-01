@@ -1,12 +1,12 @@
 <template>
   <div id="trainlist">
     <div class="header flexBox">
-      <div class="flex1 beforeday"><em class="pre-arrow icon-train"></em>前一天</div>
+      <div class="flex1 beforeday" @click="dateChange('beforeday')"><em class="pre-arrow icon-train"></em>前一天</div>
       <div class="flex1 choosedate">{{queryData.date}}</div>
-      <div class="flex1 afterday">后一天<em class="arrownext icon-train"></em></div>
+      <div class="flex1 afterday" @click="dateChange('next')">后一天<em class="arrownext icon-train"></em></div>
     </div>
     <div class="trainlist">
-      <traindatainfo v-for="item in datatrainlist" :traindata="item"></traindatainfo>
+      <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.id"></traindatainfo>
     </div>
   </div>
 </template>
@@ -18,17 +18,32 @@ export default {
   data () {
       return {
         queryData: this.$route.params,
+        queryDate:"2017-05-20",
         datatrainlist: [],
         noresult: false
       }
   },
   mounted () {
-    let _this = this,
-        ajaxdata = {
+    this.getAjax();
+  },
+  watch: {
+    queryDate: function(){
+      return this.getAjax()
+    }
+  },
+  updated () {
+  },
+  methods:{
+    dateChange:function(type){ 
+      this.queryDate = "2017-05-21";
+    },
+    getAjax: function(){
+      let _this = this,
+          ajaxdata = {
           "from":_this.queryData.from,
           "to":_this.queryData.to,
           "oby":"0",
-          "date":"2017-05-20",
+          "date":this.queryDate,
           "platId":501,
           "requestType":4,
           "headct":1,
@@ -38,26 +53,27 @@ export default {
           "headtime":1493112975746,
           "OpenId":"oOCyauGWhshD9C0v9D1VXp9vy6aE",
           "MemberId":"aCmbppvo8AloGHUDB68fxg=="
-        };
-    window.$.ajax({
-      url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
-      type: 'GET',
-      data:{
-        para:JSON.stringify(ajaxdata) 
-      },
-      timeout:  20000,
-      dataType: 'JSON',
-      success: function (data) {
-        if(data&&data.status == 200){
-          data = data.data;
-          if(data.trainlist&&data.trainlist.length>0){
-            _this.datatrainlist = data.trainlist;
-          }else{
-            _this.noresult = true;
+          };
+      window.$.ajax({
+        url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
+        type: 'GET',
+        data:{
+          para:JSON.stringify(ajaxdata) 
+        },
+        timeout:  20000,
+        dataType: 'JSON',
+        success: function (data) {
+          if(data&&data.status == 200){
+            data = data.data;
+            if(data.trainlist&&data.trainlist.length>0){
+              _this.datatrainlist = data.trainlist;
+            }else{
+              _this.noresult = true;
+            }
           }
         }
-      }
-    });
+      });
+    }
   },
   components: {
     'traindatainfo':train
