@@ -1,3 +1,4 @@
+
 Date.prototype.format = function(b) {
     var c = {
         "M+": this.getMonth() + 1,
@@ -23,3 +24,27 @@ Date.getWeek = function(a) {
     this.aWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
     return this.aWeek[a]
 }
+/**
+ * storage操作
+ * SetStorage方法：设置存储storage的key和value值，如果storage存储失败，则将数据存储在cookie中
+ * GetStorage方法：根据key值获取storage相对应的value值，获取失败则从cookie中获取，
+ */
+var StorageHelp = {
+    SetStorage: function (e, g) {
+       
+    }, 
+    GetStorage: function (d) {
+       
+    },
+    SetSessionStorage: function(e,g){
+       
+    },
+    GetSessionStorage: function(d){
+        
+    },
+    ClearSessionStorage:function(arr){
+       
+    }
+};
+export default {"StorageHelp":StorageHelp}
+

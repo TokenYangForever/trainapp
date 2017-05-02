@@ -6,6 +6,7 @@
       <span class="clear" @click="clearmsg()"><i>×</i></span>
       <span class="cancel" @click="backToHome()">取消</span>
     </div>
+    <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"></vue-loading> 
     <div class='city-item' v-for="(item, index) in cityList" @click="backToHome(item.Name)">{{item.Name}}</div>
     <div class="noresult" v-if="noresult">对不起，找不到{{this.searchmsg}}</div>
   </div>
@@ -13,22 +14,28 @@
 
 <script>
 import router from '@/router'
+import vueLoading from 'vue-loading-template'
 const $ = window.$;
 export default {
   name: 'citycom',
-  props: ['serchtype','key'],
+  props: ['serchtype'],
   data () {
       return {
         cityList: [],
         searchmsg: '',
-        noresult: false
+        noresult: false,
+        showloading: false
       }
   },
   mounted () {
   },
+  updated (){
+    //this.showloading = false;
+  },
   methods: {
     searchCity: function(){
-      let _this = this
+      let _this = this;
+      _this.showloading = true;
       $.ajax({
           url: "http://wx.17u.cn/traintest/GetCityListByLetter",
           type: 'GET',
@@ -38,8 +45,11 @@ export default {
           },
           dataType: 'JSONP',
           success: function (data) {
+              debugger
+            _this.showloading = false;
             if(data.State == 100){
               _this.cityList = data.TrainStation.StationList;
+              _this.noresult = false;
               _this.searchmsg = ""; 
             }else{
               //请求无结果
@@ -61,11 +71,15 @@ export default {
       }else
         this.$emit('closeCity')
     }
-  }
+  },
+  components: {
+    'vueLoading':vueLoading
+  },
 }
 </script>
 
 <style scoped>
+
   #citylist{
     position: absolute;
     top: 0;

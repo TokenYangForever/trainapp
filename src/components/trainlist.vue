@@ -2,10 +2,11 @@
   <div id="trainlist">
     <div class="header flexBox">
       <div class="flex1 beforeday" @click="dateChange('beforeday')"><em class="pre-arrow icon-train"></em>前一天</div>
-      <div class="flex1 choosedate">{{queryData.date}}</div>
+      <div class="flex1 choosedate">{{queryDate}}</div>
       <div class="flex1 afterday" @click="dateChange('next')">后一天<em class="arrownext icon-train"></em></div>
     </div>
     <div class="trainlist">
+      <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"></vue-loading> 
       <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.id"></traindatainfo>
     </div>
   </div>
@@ -13,14 +14,17 @@
 
 <script>
 import train from '@/components/trainlist/train'
+import vueLoading from 'vue-loading-template'
+
 export default {
   name: 'trainlist',
   data () {
       return {
         queryData: this.$route.params,
-        queryDate:"2017-05-20",
+        queryDate: this.$route.params.date,
         datatrainlist: [],
-        noresult: false
+        noresult: false,
+        showloading: true
       }
   },
   mounted () {
@@ -32,12 +36,17 @@ export default {
     }
   },
   updated () {
+    this.showloading = false;
   },
   methods:{
-    dateChange:function(type){ 
-      this.queryDate = "2017-05-21";
+    dateChange:function(type){
+      if(type=="next")
+        this.queryDate = new Date(new Date(this.queryDate).getTime()+24*3600*1000).format('yyyy-MM-dd');
+      else
+        this.queryDate = new Date(new Date(this.queryDate).getTime()-24*3600*1000).format('yyyy-MM-dd');
     },
     getAjax: function(){
+      this.showloading = true;
       let _this = this,
           ajaxdata = {
           "from":_this.queryData.from,
@@ -76,7 +85,8 @@ export default {
     }
   },
   components: {
-    'traindatainfo':train
+    'traindatainfo':train,
+    'vueLoading':vueLoading
   }
   
 }

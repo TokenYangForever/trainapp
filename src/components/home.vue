@@ -20,25 +20,26 @@
 <script>
 import router from '@/router'
 import city from '@/components/getCity'
+import commonjs from '@//public/common.js'
+console.log(commonjs);
+//StorageHelp = commonjs[0];
 
 export default {
   name: 'home',
   data () {
     return {
-      fromCity: '请选择城市',
-      date: '5月12日',
-      toCity: '请选择城市',
+      fromCity: '',
+      date: '2017-05-12',
+      toCity: '',
       showcity: false,
       searhType: '',
       clickChange: false
     }
   },
   mounted () {
-    // let searhType = this.$route.params.type,
-    //     searchCity = this.$route.params.cName;
-    // if(searhType){
-    //   searhType == 'from' ? this.fromCity =  searchCity : this.toCity = searchCity;
-    // }
+    console.log(commonjs.StorageHelp);
+    this.fromCity = commonjs.StorageHelp.GetSessionStorage("fromCity") || '请选择城市';
+    this.toCity = commonjs.StorageHelp.GetSessionStorage("toCity") || '请选择城市';
   },
   methods: {
     getCity: function(type){
@@ -46,8 +47,16 @@ export default {
       this.showcity = true;
     },
     closeCity: function(type,cname){
-      if(type&&cname)
-        type == "from" ? this.fromCity = cname:this.toCity = cname;
+      if(type&&cname){
+        if(type == "from"){
+          this.fromCity = cname;     
+          StorageHelp.SetSessionStorage("fromCity",cname);  
+        }
+        else{
+          this.toCity = cname;
+          StorageHelp.SetSessionStorage("toCity",cname);
+        }
+      }
       
       this.showcity = false;
     },
