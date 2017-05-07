@@ -3,7 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import commonjs from './public/common.js'
+
+
 
 Vue.config.productionTip = false
 

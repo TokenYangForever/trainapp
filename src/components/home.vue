@@ -18,12 +18,11 @@
 </template>
 
 <script>
-import router from '@/router'
 import city from '@/components/getCity'
-import commonjs from '@//public/common.js'
-console.log(commonjs);
-//StorageHelp = commonjs[0];
+import commonjs from '@/public/common.js'
+import Router from '@/router'
 
+var StorageHelp = commonjs.StorageHelp;
 export default {
   name: 'home',
   data () {
@@ -37,9 +36,8 @@ export default {
     }
   },
   mounted () {
-    console.log(commonjs.StorageHelp);
-    this.fromCity = commonjs.StorageHelp.GetSessionStorage("fromCity") || '请选择城市';
-    this.toCity = commonjs.StorageHelp.GetSessionStorage("toCity") || '请选择城市';
+    this.fromCity = StorageHelp.GetSessionStorage("fromCity") || '请选择城市';
+    this.toCity = StorageHelp.GetSessionStorage("toCity") || '请选择城市';
   },
   methods: {
     getCity: function(type){
@@ -61,7 +59,7 @@ export default {
       this.showcity = false;
     },
     searchClick: function(){
-      router.push({ name: 'trainlist',params: { from:this.fromCity,to:this.toCity,date:this.date}})
+      Router.push({ name: 'trainlist',params: { from:this.fromCity,to:this.toCity,date:this.date}})
     },
     changeCity: function(){
       let _this = this;

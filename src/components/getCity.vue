@@ -16,6 +16,7 @@
 import router from '@/router'
 import vueLoading from 'vue-loading-template'
 const $ = window.$;
+
 export default {
   name: 'citycom',
   props: ['serchtype'],
@@ -45,7 +46,6 @@ export default {
           },
           dataType: 'JSONP',
           success: function (data) {
-              debugger
             _this.showloading = false;
             if(data.State == 100){
               _this.cityList = data.TrainStation.StationList;

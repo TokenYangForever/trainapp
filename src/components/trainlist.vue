@@ -6,7 +6,9 @@
       <div class="flex1 afterday" @click="dateChange('next')">后一天<em class="arrownext icon-train"></em></div>
     </div>
     <div class="trainlist">
-      <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"></vue-loading> 
+      <div class="loadingwrap">
+        <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"  ></vue-loading>
+      </div> 
       <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.id"></traindatainfo>
     </div>
   </div>
@@ -36,7 +38,7 @@ export default {
     }
   },
   updated () {
-    this.showloading = false;
+    
   },
   methods:{
     dateChange:function(type){
@@ -46,7 +48,6 @@ export default {
         this.queryDate = new Date(new Date(this.queryDate).getTime()-24*3600*1000).format('yyyy-MM-dd');
     },
     getAjax: function(){
-      this.showloading = true;
       let _this = this,
           ajaxdata = {
           "from":_this.queryData.from,
@@ -71,6 +72,9 @@ export default {
         },
         timeout:  20000,
         dataType: 'JSON',
+        beforeSend: function(){
+          _this.showloading = true;
+        },
         success: function (data) {
           if(data&&data.status == 200){
             data = data.data;
@@ -80,6 +84,9 @@ export default {
               _this.noresult = true;
             }
           }
+        },
+        complete: function(){
+          _this.showloading = false;
         }
       });
     }
@@ -92,6 +99,12 @@ export default {
 }
 </script>
 <style scoped>
+  .loadingwrap{
+    position: fixed;
+    left: 50%;
+    z-index: 10;
+    margin-left: -50px;
+  }
   .beforeday{
     text-align: left;
   }

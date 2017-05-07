@@ -14,7 +14,7 @@ export default new Router({
       component: home
     },
     {
-      path: '/trainlist/:from/:to/:date',
+      path: '/trainlist/',
       name: 'trainlist',
       component: trainlist
     }

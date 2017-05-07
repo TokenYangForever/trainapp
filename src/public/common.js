@@ -31,16 +31,20 @@ Date.getWeek = function(a) {
  */
 var StorageHelp = {
     SetStorage: function (e, g) {
-       
+       console.log("set")
     }, 
     GetStorage: function (d) {
-       
+       console.log("get")
     },
     SetSessionStorage: function(e,g){
-       
+        if(window.localStorage){
+            localStorage.setItem(e, g);
+        }
     },
     GetSessionStorage: function(d){
-        
+        if(window.localStorage){
+            return localStorage.getItem(d);
+        }
     },
     ClearSessionStorage:function(arr){
        
