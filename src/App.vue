@@ -25,10 +25,19 @@ export default {
     transform: translateX(400px);
     opacity: 0;
   }
+  .maskwrap{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #666;
+    opacity: .6;
+    z-index: 10
+  }
   .loadingwrap{
     position: fixed;
     left: 50%;
-    z-index: 10;
+    z-index: 11;
     margin-left: -50px;
   }
   .vue-loading{

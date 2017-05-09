@@ -14,23 +14,23 @@
     </div>
     <div class="search" @click="searchClick()">查询</div>
     <citysearch v-if='showcity' :serchtype="searhType" @closeCity="closeCity"></citysearch>
-
+<transition name="slide-fade">
     <calendar 
-    v-show="showcalendar"
-    @choosedate="chooseDate"
-    :show.sync="calendar.show"
-    :type="calendar.type"
-    :value.sync="date" 
-    :x="calendar.x" 
-    :y="calendar.y" 
-    :begin.sync="calendar.begin" 
-    :end.sync="calendar.end" 
-    :range.sync="calendar.range"
-    :weeks="calendar.weeks"
-    :months="calendar.months"
-    :sep="calendar.sep">
+      v-show="showcalendar"
+      @choosedate="chooseDate"
+      :show.sync="calendar.show"
+      :type="calendar.type"
+      :value.sync="date" 
+      :x="calendar.x" 
+      :y="calendar.y" 
+      :begin.sync="calendar.begin" 
+      :end.sync="calendar.end" 
+      :range.sync="calendar.range"
+      :weeks="calendar.weeks"
+      :months="calendar.months"
+      :sep="calendar.sep">
     </calendar>
-
+</transition>
   </div>
 </template>
 
@@ -58,8 +58,8 @@ export default {
                 y:0,
                 picker:"date",
                 type:"date",
-                begin:"2017-05-01",
-                end:"2017-07-25",
+                begin:new Date().format("yyyy-MM-dd"),
+                end:new Date(new Date().getTime()+60*24*3600*1000).format("yyyy-MM-dd"),
                 sep:"-",
                 weeks:['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
                 months:['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
@@ -119,9 +119,9 @@ export default {
       // this.calendar.months=this.calendar.items[type].months
 
       // this.calendar.show=true
-      this.calendar.x=e.target.offsetLeft
-      this.calendar.y=e.target.offsetTop+e.target.offsetHeight+8
-      this.showcalendar = true
+      this.calendar.x=window.innerWidth/2 - 150;
+      this.calendar.y=50;
+      this.showcalendar = true;
     },
     chooseDate: function(date){
       var _this = this;

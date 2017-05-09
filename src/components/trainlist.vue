@@ -9,7 +9,8 @@
     <div class="trainlist">
       <div class="loadingwrap">
         <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"  ></vue-loading>
-      </div> 
+      </div>
+      <div class="maskwrap" v-show="showloading"></div> 
       <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.trainno"></traindatainfo>
     </div>
   </div>
@@ -102,7 +103,6 @@ export default {
 }
 </script>
 <style scoped>
-  
   .beforeday{
     text-align: left;
   }

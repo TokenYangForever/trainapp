@@ -4,22 +4,22 @@
         top: 0;
         height: 100%;
         width: 100%;
-        background-color: white;
+        background-color: #999;
         z-index: 10;
     }
     .calendar {
-    width: 300px;
-    padding: 10px;
-    background: #fff;
-    position: absolute;
-    border: 1px solid #DEDEDE;
-    border-radius: 2px;
-    opacity:.95;
-    transition: all .5s ease;
+        width: 300px;
+        padding: 10px;
+        background: #fff;
+        position: absolute;
+        border: 1px solid #DEDEDE;
+        border-radius: 2px;
+        opacity:.95;
+        transition: all .5s ease;
     }
     .calendar-enter, .calendar-leave {
-    opacity: 0;
-    transform: translate3d(0,-10px, 0);
+        opacity: 0;
+        transform: translate3d(0,-10px, 0);
     }
     .calendar:before {
         position: absolute;
