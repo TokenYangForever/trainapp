@@ -1,22 +1,33 @@
 <template>
+<transition name="slide-fade">
   <div id="citylist">
     <div class="search">
-      <input class='searchCity' v-model="searchmsg" placeholder="中文/拼音/首字母" @change="searchCity()">
+      <input class='searchCity' v-model="searchmsg" placeholder="中文/拼音/首字母" @input="searchCity()">
       <span class="search-icon"></span>
       <span class="clear" @click="clearmsg()"><i>×</i></span>
       <span class="cancel" @click="backToHome()">取消</span>
     </div>
-    <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"></vue-loading> 
-    <div class='city-item' v-for="(item, index) in cityList" @click="backToHome(item.Name)">{{item.Name}}</div>
-    <div class="noresult" v-if="noresult">对不起，找不到{{this.searchmsg}}</div>
+    <!-- <div class="loadingwrap">
+      <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"></vue-loading  > 
+    </div> -->
+    <transition-group  
+    name="staggered-fade"
+    tag="div"
+    v-bind:css="false"
+    v-on:before-enter="beforeEnter"
+    v-on:enter="enter"
+    v-on:leave="leave">
+      <div class="noresult" v-if="noresult" :key="noresult">对不起，找不到{{this.searchmsg}}</div>
+      <div class='city-item' v-else v-for="(item, index) in cityList" @click="backToHome(item.Name)" :key="item.QPY">{{item.Name}}</div>
+    </transition-group>
   </div>
+</transition>
 </template>
-
 <script>
 import router from '@/router'
 import vueLoading from 'vue-loading-template'
 const $ = window.$;
-
+const Velocity = $.Velocity;
 export default {
   name: 'citycom',
   props: ['serchtype'],
@@ -37,7 +48,8 @@ export default {
     searchCity: function(){
       let _this = this;
       _this.showloading = true;
-      $.ajax({
+      if(this.searchmsg){
+        $.ajax({
           url: "http://wx.17u.cn/traintest/GetCityListByLetter",
           type: 'GET',
           data:{
@@ -50,15 +62,19 @@ export default {
             if(data.State == 100){
               _this.cityList = data.TrainStation.StationList;
               _this.noresult = false;
-              _this.searchmsg = ""; 
+              //_this.searchmsg = ""; 
             }else{
               //请求无结果
               _this.cityList = [];
               _this.noresult = true;
             }
           }
-      });
-
+        });
+      }else{
+        //请求无结果
+        _this.cityList = [];
+        _this.noresult = false;
+      }
     },
     clearmsg: function(){
       this.searchmsg = "";
@@ -70,7 +86,33 @@ export default {
         this.$emit('closeCity',this.serchtype,cName)
       }else
         this.$emit('closeCity')
+    },
+    //动画方法start
+    beforeEnter: function (el) {
+      el.style.opacity = 0
+      el.style.height = 0
+    },
+    enter: function (el, done) {
+      var delay = el.dataset.index * 150
+      setTimeout(function () {
+        Velocity(
+          el,
+          { opacity: 1, height: '44px' },
+          { complete: done }
+        )
+      }, delay)
+    },
+    leave: function (el, done) {
+      var delay = el.dataset.index * 150
+      setTimeout(function () {
+        Velocity(
+          el,
+          { opacity: 0, height: 0 },
+          { complete: done }
+        )
+      }, delay)
     }
+    //Velocity end
   },
   components: {
     'vueLoading':vueLoading
@@ -79,7 +121,7 @@ export default {
 </script>
 
 <style scoped>
-
+  
   #citylist{
     position: absolute;
     top: 0;

@@ -15,6 +15,22 @@ export default {
 </script>
 
 <style>
+  .slide-fade-enter-active {
+    transition: all .5s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-active {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  .loadingwrap{
+    position: fixed;
+    left: 50%;
+    z-index: 10;
+    margin-left: -50px;
+  }
   .vue-loading{
     padding-top: 50px;
   }

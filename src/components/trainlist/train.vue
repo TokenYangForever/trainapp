@@ -17,11 +17,10 @@
         <span class="adjust canRobTickets"><span class="money">{{this.getleast()}}</span>起</span>
       </div>
     </div>
-
     <div class="seats" v-if="!openseat">
       <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span> 
     </div>
-    <div class="seatlists" v-else>
+    <div class="seatlists"  v-else>
       <div class="seatItem flexBox" v-for="item in traindata.ticketstatus" v-if="item">
         <div class="flex1">{{item.cn}}</div>
         <div class="flex1" style="color: #FF6540">￥{{item.price}}</div>

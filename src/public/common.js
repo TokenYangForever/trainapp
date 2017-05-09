@@ -1,4 +1,4 @@
-
+//基于原生
 Date.prototype.format = function(b) {
     var c = {
         "M+": this.getMonth() + 1,
@@ -50,5 +50,23 @@ var StorageHelp = {
        
     }
 };
-export default {"StorageHelp":StorageHelp}
+/**
+ * 获得url中的queryString OBJ
+ */
+function getRequest() {
+    var searchString = window.location.search.substring(1),
+        params = searchString.split("&"),
+        hash = {};
+    if (searchString == "") return {};
+    for (var i = 0; i < params.length; i++) {
+        var pos = params[i].indexOf('=');
+        if (pos == -1) { continue; }
+        var paraName = params[i].substring(0, pos),
+            paraValue = params[i].substring(pos + 1);
+        hash[paraName] = paraValue;
+    }
+    return hash;
+}
+
+export default {"StorageHelp":StorageHelp,"getRequest":getRequest}
 

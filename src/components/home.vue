@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="queryDate">{{date}}</div>
+    <div class="queryDate" @click.stop="openCalendar($event,'picker1')">{{date}}</div>
     <div class="flexBox">
       <div class="fromCity flex1" @click="getCity('from')">
         <p>出发站</p>
@@ -14,13 +14,31 @@
     </div>
     <div class="search" @click="searchClick()">查询</div>
     <citysearch v-if='showcity' :serchtype="searhType" @closeCity="closeCity"></citysearch>
+
+    <calendar 
+    v-show="showcalendar"
+    @choosedate="chooseDate"
+    :show.sync="calendar.show"
+    :type="calendar.type"
+    :value.sync="date" 
+    :x="calendar.x" 
+    :y="calendar.y" 
+    :begin.sync="calendar.begin" 
+    :end.sync="calendar.end" 
+    :range.sync="calendar.range"
+    :weeks="calendar.weeks"
+    :months="calendar.months"
+    :sep="calendar.sep">
+    </calendar>
+
   </div>
 </template>
 
 <script>
 import city from '@/components/getCity'
-import commonjs from '@/public/common.js'
+import commonjs from '@/public/common'
 import Router from '@/router'
+import calendar from '@/components/public/calendar.vue'
 
 var StorageHelp = commonjs.StorageHelp;
 export default {
@@ -32,7 +50,22 @@ export default {
       toCity: '',
       showcity: false,
       searhType: '',
-      clickChange: false
+      clickChange: false,
+      // 数据绑定
+      calendar:{
+                show:false,
+                x:0,
+                y:0,
+                picker:"date",
+                type:"date",
+                begin:"2017-05-01",
+                end:"2017-07-25",
+                sep:"-",
+                weeks:['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+                months:['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                range:false
+      },
+      showcalendar: false
     }
   },
   mounted () {
@@ -70,10 +103,35 @@ export default {
         _this.toCity = temp;
         _this.clickChange = false;
       },500)
+    },
+    // 打开显示选择器
+    openCalendar: function(e,type) {
+      // 设置类型
+      // this.calendar.picker=type
+      // this.calendar.type=this.calendar.items[type].type
+      // this.calendar.range=this.calendar.items[type].range
+      // this.calendar.begin=this.calendar.items[type].begin
+      // this.calendar.end=this.calendar.items[type].end
+      // this.calendar.value=this.calendar.items[type].value
+      // // 可不用写
+      // this.calendar.sep=this.calendar.items[type].sep
+      // this.calendar.weeks=this.calendar.items[type].weeks
+      // this.calendar.months=this.calendar.items[type].months
+
+      // this.calendar.show=true
+      this.calendar.x=e.target.offsetLeft
+      this.calendar.y=e.target.offsetTop+e.target.offsetHeight+8
+      this.showcalendar = true
+    },
+    chooseDate: function(date){
+      var _this = this;
+      this.date = new Date(date).format("yyyy-MM-dd");
+      this.showcalendar = false;
     }
   },
   components: {
-    'citysearch':city
+    'citysearch':city,
+    'calendar':calendar
   }
 }
 </script>

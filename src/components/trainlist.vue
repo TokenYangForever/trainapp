@@ -1,4 +1,5 @@
 <template>
+<transition name="slide-fade">
   <div id="trainlist">
     <div class="header flexBox">
       <div class="flex1 beforeday" @click="dateChange('beforeday')"><em class="pre-arrow icon-train"></em>前一天</div>
@@ -9,14 +10,16 @@
       <div class="loadingwrap">
         <vue-loading type="spiningDubbles" color="rgb(90, 193, 221)" :size="{ width: '100px', height: '100px'}" v-show="showloading"  ></vue-loading>
       </div> 
-      <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.id"></traindatainfo>
+      <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.trainno"></traindatainfo>
     </div>
   </div>
+</transition>
 </template>
 
 <script>
 import train from '@/components/trainlist/train'
 import vueLoading from 'vue-loading-template'
+
 
 export default {
   name: 'trainlist',
@@ -99,12 +102,7 @@ export default {
 }
 </script>
 <style scoped>
-  .loadingwrap{
-    position: fixed;
-    left: 50%;
-    z-index: 10;
-    margin-left: -50px;
-  }
+  
   .beforeday{
     text-align: left;
   }
@@ -115,7 +113,6 @@ export default {
     line-height: 24px;
     border-bottom: 1px solid #dcdcdc;
     background-color: #fff;
-    position: fixed;
     left: 0;
     top: 0;
     z-index: 10;
@@ -137,8 +134,5 @@ export default {
     background-position: -324px -2px;
     display: inline-block;
     margin-right: 4px;
-  }
-  .trainlist{
-    margin-top: 55px;
   }
 </style>
