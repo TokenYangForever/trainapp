@@ -29,44 +29,51 @@ Date.getWeek = function(a) {
  * SetStorage方法：设置存储storage的key和value值，如果storage存储失败，则将数据存储在cookie中
  * GetStorage方法：根据key值获取storage相对应的value值，获取失败则从cookie中获取，
  */
-var StorageHelp = {
-    SetStorage: function (e, g) {
-       console.log("set")
-    }, 
-    GetStorage: function (d) {
-       console.log("get")
-    },
-    SetSessionStorage: function(e,g){
-        if(window.localStorage){
-            localStorage.setItem(e, g);
+
+var commonJs = {
+    StorageHelp:{
+        SetSessionStorage: function(e,g){
+            if(window.localStorage){
+                localStorage.setItem(e, g);
+            }else{//存储cookie
+    
+            }
+        },
+        GetSessionStorage: function(d){
+            if(window.localStorage){
+                return localStorage.getItem(d);
+            }
+        },
+        ClearSessionStorage:function(arr){
+            if(arr.length){
+                for(var i=0;i<arr.length;i++){
+                    sessionStorage.removeItem(arr[i]);
+                }
+            }
+            
         }
     },
-    GetSessionStorage: function(d){
-        if(window.localStorage){
-            return localStorage.getItem(d);
+    getRequest: function(){
+        var searchString = window.location.search.substring(1),
+            params = searchString.split("&"),
+            hash = {};
+        if (searchString == "") return {};
+        for (var i = 0; i < params.length; i++) {
+            var pos = params[i].indexOf('=');
+            if (pos == -1) { continue; }
+            var paraName = params[i].substring(0, pos),
+                paraValue = params[i].substring(pos + 1);
+            hash[paraName] = paraValue;
         }
+        return hash;
     },
-    ClearSessionStorage:function(arr){
-       
+    extend: function(to,_from) {
+        for (var key in _from) {
+          to[key] = _from[key];
+        }
+        return to
     }
-};
-/**
- * 获得url中的queryString OBJ
- */
-function getRequest() {
-    var searchString = window.location.search.substring(1),
-        params = searchString.split("&"),
-        hash = {};
-    if (searchString == "") return {};
-    for (var i = 0; i < params.length; i++) {
-        var pos = params[i].indexOf('=');
-        if (pos == -1) { continue; }
-        var paraName = params[i].substring(0, pos),
-            paraValue = params[i].substring(pos + 1);
-        hash[paraName] = paraValue;
-    }
-    return hash;
 }
 
-export default {"StorageHelp":StorageHelp,"getRequest":getRequest}
+export default {"commonJs":commonJs}
 

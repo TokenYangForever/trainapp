@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="queryDate" @click.stop="openCalendar($event,'picker1')">{{date}}</div>
+    <div class="queryDate" @click.stop="openCalendar($event,'picker1')"><h3>出发日期</h3><p>{{date}}</p></div>
     <div class="flexBox">
       <div class="fromCity flex1" @click="getCity('from')">
         <p>出发站</p>
@@ -40,7 +40,7 @@ import commonjs from '@/public/common'
 import Router from '@/router'
 import calendar from '@/components/public/calendar.vue'
 
-var StorageHelp = commonjs.StorageHelp;
+var StorageHelp = commonjs.commonJs.StorageHelp;
 export default {
   name: 'home',
   data () {
