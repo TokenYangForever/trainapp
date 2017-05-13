@@ -2,9 +2,9 @@
 <transition name="slide-fade">
   <div id="trainlist">
     <div class="header flexBox">
-      <div class="flex1 beforeday" @click="dateChange('beforeday')"><em class="pre-arrow icon-train"></em>前一天</div>
+      <div class="flex1 beforeday" @click="dateChange('beforeday')" :class="{noset:begin}"><em class="pre-arrow icon-train"></em>前一天</div>
       <div class="flex1 choosedate">{{queryDate}}</div>
-      <div class="flex1 afterday" @click="dateChange('next')">后一天<em class="arrownext icon-train"></em></div>
+      <div class="flex1 afterday" @click="dateChange('next')" :class="{noset:end}">后一天<em class="arrownext icon-train"></em></div>
     </div>
     <div class="trainlist">
       <div class="loadingwrap">
@@ -30,7 +30,9 @@ export default {
         queryDate: this.$route.params.date,
         datatrainlist: [],
         noresult: false,
-        showloading: true
+        showloading: true,
+        begin: this.$route.params.date == this.$route.params.begin,
+        end: this.$route.params.date == this.$route.params.end
       }
   },
   mounted () {
@@ -38,18 +40,25 @@ export default {
   },
   watch: {
     queryDate: function(){
+      this.begin = this.queryData.begin == this.queryDate;
+      this.end = this.queryData.end == this.queryDate;
       return this.getAjax()
     }
   },
   updated () {
-    
   },
   methods:{
     dateChange:function(type){
-      if(type=="next")
+      if(type=="next"){
+        if(this.end)
+          return
         this.queryDate = new Date(new Date(this.queryDate).getTime()+24*3600*1000).format('yyyy-MM-dd');
-      else
+      }
+      else{
+        if(this.begin)
+          return
         this.queryDate = new Date(new Date(this.queryDate).getTime()-24*3600*1000).format('yyyy-MM-dd');
+      }
     },
     getAjax: function(){
       let _this = this,
@@ -103,6 +112,9 @@ export default {
 }
 </script>
 <style scoped>
+  .noset{
+    opacity: .4;
+  }
   .beforeday{
     text-align: left;
   }

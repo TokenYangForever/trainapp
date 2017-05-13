@@ -1,6 +1,5 @@
 <template>
   <div class="trainDateInfo" @click="toggleseat()">
-
     <div class="TrainBox">
       <div class="depart flex1">
         <div class="bTime">{{traindata.fmtime}}</div> 
@@ -13,12 +12,16 @@
       </div> <div class="arrive flex1">
         <div class="eTime">{{traindata.totime}}</div>
         <div class="aStation">{{traindata.tocity}}</div>
-      </div> <div class="leastMoney flex1">
-        <span class="adjust canRobTickets"><span class="money">{{this.getleast()}}</span>起</span>
+      </div> 
+      <div class="leastMoney flex1">
+        <span class="adjust money" v-if="isgorob">去抢票</span>
+        <span class="adjust canRobTickets" v-else="isgorob||isnotegrab"><span class="money">{{this.getleast()}}</span>起</span>
       </div>
     </div>
     <div class="seats" v-if="!openseat">
-      <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span> 
+      <span class="seat" v-if="isgorob">已售空，可抢票</span>
+      <span class="seat" v-else-if="isnotegrab">将于{{traindata.notetime}}起售</span>
+      <span class="seat" v-for="item in traindata.ticketstatus" v-else-if="item">{{item.cn}}({{item.seats}})</span> 
     </div>
     <div class="seatlists"  v-else>
       <div class="seatItem flexBox" v-for="item in traindata.ticketstatus" v-if="item">
@@ -42,6 +45,8 @@ export default {
   data () {
     return {
       openseat: false,
+      isgorob: this.traindata.isbook == 2 && !this.traindata.note,
+      isnotegrab: this.traindata.isbook == 2 && this.traindata.notetime
     }
   },
   mounted () {
@@ -60,6 +65,8 @@ export default {
       return least;
     },
     toggleseat: function(){
+      if(this.isgorob || this.isnotegrab)
+        return
       this.openseat = !this.openseat;
     }
   }

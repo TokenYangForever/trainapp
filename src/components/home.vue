@@ -92,7 +92,7 @@ export default {
       this.showcity = false;
     },
     searchClick: function(){
-      Router.push({ name: 'trainlist',params: { from:this.fromCity,to:this.toCity,date:this.date}})
+      Router.push({ name: 'trainlist',params: { from:this.fromCity,to:this.toCity,date:this.date,begin:this.calendar.begin,end:this.calendar.end}})
     },
     changeCity: function(){
       let _this = this;
