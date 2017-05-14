@@ -46,7 +46,7 @@ export default {
   data () {
     return {
       fromCity: '',
-      date: '2017-05-12',
+      date: new Date().format('yyyy-MM-dd'),
       toCity: '',
       showcity: false,
       searhType: '',

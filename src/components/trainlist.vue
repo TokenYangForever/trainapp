@@ -13,6 +13,7 @@
       <div class="maskwrap" v-show="showloading"></div> 
       <traindatainfo v-for="item in datatrainlist" :traindata="item" :key="item.trainno"></traindatainfo>
     </div>
+    <fitter :traindataList="datatrainlist"></fitter>
   </div>
 </transition>
 </template>
@@ -20,7 +21,7 @@
 <script>
 import train from '@/components/trainlist/train'
 import vueLoading from 'vue-loading-template'
-
+import fitter from '@/components/trainlist/fitter'
 
 export default {
   name: 'trainlist',
@@ -48,7 +49,7 @@ export default {
   updated () {
   },
   methods:{
-    dateChange:function(type){
+    dateChange: function(type){
       if(type=="next"){
         if(this.end)
           return
@@ -102,17 +103,21 @@ export default {
           _this.showloading = false;
         }
       });
+    },
+    trainlistChange: function(data){
+      this.datatrainlist = data.data;
     }
   },
   components: {
     'traindatainfo':train,
-    'vueLoading':vueLoading
+    'vueLoading':vueLoading,
+    'fitter':fitter
   }
   
 }
 </script>
 <style scoped>
-  .noset{
+    .noset{
     opacity: .4;
   }
   .beforeday{

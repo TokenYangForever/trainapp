@@ -21,7 +21,9 @@
     <div class="seats" v-if="!openseat">
       <span class="seat" v-if="isgorob">已售空，可抢票</span>
       <span class="seat" v-else-if="isnotegrab">将于{{traindata.notetime}}起售</span>
-      <span class="seat" v-for="item in traindata.ticketstatus" v-else-if="item">{{item.cn}}({{item.seats}})</span> 
+      <div v-else>
+        <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span>
+      </div>
     </div>
     <div class="seatlists"  v-else>
       <div class="seatItem flexBox" v-for="item in traindata.ticketstatus" v-if="item">
