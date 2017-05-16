@@ -99,7 +99,7 @@
 
 export default {
   name: 'fitter',
-  props: ['traindataList','fmlist','tolist','backlist'],
+  props: ['traindataList','fmlist','tolist','backlist','qkey'],
   data () {
     var f_condition = [{
         "高铁(G/C)": false,
@@ -138,6 +138,27 @@ export default {
   mounted () {  
   },
   watch: {
+    qkey: function(){
+      if(this.hasSelect())
+        this.confirmSelect()
+      var byDtime = this.byDtime;
+      var byTakingtime = this.byTakingtime;
+      if(byDtime){
+          this.fitterData.sort(function(a,b){
+            var result = byDtime == 1 ? a.fmtimeps - b.fmtimeps : b.fmtimeps - a.fmtimeps;
+            return result;
+          });
+          this.fitterChange();
+      }
+
+      if(byTakingtime){
+        this.fitterData.sort(function(a,b){
+          var result = byTakingtime == 1 ? a.usedtimeps - b.usedtimeps : b.usedtimeps - a.usedtimeps;
+          return result;
+        });
+        this.fitterChange();
+      }
+    },
     byDtime: function(){
       var byDtime = this.byDtime;
           this.fitterData = this.traindataList;
@@ -166,7 +187,7 @@ export default {
       this.openfitter = !this.openfitter;
     },
     confirmSelect: function(){
-      this.openFitter();
+      this.openfitter = false;
       var newList = this.backlist,
           fitType = [],
           fitTotime = [],

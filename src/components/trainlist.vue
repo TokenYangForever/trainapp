@@ -22,6 +22,7 @@
      :fmlist = "fmlist"
      :tolist = "tolist"
      :backlist = "backdatatrainlist"
+     :qkey = "qkey"
      @trainlistChange = "trainlistChange"></fitter>
   </div>
 </transition>
@@ -46,7 +47,8 @@ export default {
         showloading: true,
         openfitter: false,
         begin: this.$route.params.date == this.$route.params.begin,
-        end: this.$route.params.date == this.$route.params.end
+        end: this.$route.params.date == this.$route.params.end,
+        qkey:''//监听每次查询
       }
   },
   mounted () {
@@ -110,6 +112,7 @@ export default {
               _this.fmlist = data.fmlist;
               _this.backdatatrainlist = data.trainlist;
               _this.datatrainlist = data.trainlist;
+              _this.qkey = data.qkey
             }else{
               _this.noresult = true;
             }
