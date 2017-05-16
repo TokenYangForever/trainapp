@@ -1,5 +1,5 @@
 <template>
-  <div class="trainDateInfo" @click="toggleseat()">
+  <div class="trainDateInfo" @click="toggleseat()" :class="{unavilable: isStop}">
     <div class="TrainBox">
       <div class="depart flex1">
         <div class="bTime">{{traindata.fmtime}}</div> 
@@ -15,11 +15,13 @@
       </div> 
       <div class="leastMoney flex1">
         <span class="adjust money" v-if="isgorob">去抢票</span>
+        <span v-else-if="isStop">暂停发售</span>
         <span class="adjust canRobTickets" v-else="isgorob||isnotegrab"><span class="money">{{this.getleast()}}</span>起</span>
       </div>
     </div>
     <div class="seats" v-if="!openseat">
       <span class="seat" v-if="isgorob">已售空，可抢票</span>
+      <span class="seat" v-else-if="isStop">列车运行图调整</span>
       <span class="seat" v-else-if="isnotegrab">将于{{traindata.notetime}}起售</span>
       <div v-else>
         <span class="seat" v-for="item in traindata.ticketstatus" v-if="item">{{item.cn}}({{item.seats}})</span>
@@ -28,7 +30,7 @@
     <div class="seatlists"  v-else>
       <div class="seatItem flexBox" v-for="item in traindata.ticketstatus" v-if="item">
         <div class="flex1">{{item.cn}}</div>
-        <div class="flex1" style="color: #FF6540">￥{{item.price}}</div>
+        <div class="flex1" style="color: #FF6540">¥{{item.price}}</div>
         <div class="flex1">{{item.seats}}张</div>
         <div class="flex1">
           <span v-if="item.seats>0" class="bookTicket">预定</span>
@@ -47,6 +49,7 @@ export default {
   data () {
     return {
       openseat: false,
+      isStop: this.traindata.note == '列车运行图调整,暂停发售',
       isgorob: this.traindata.isbook == 2 && !this.traindata.note,
       isnotegrab: this.traindata.isbook == 2 && this.traindata.notetime
     }
@@ -67,7 +70,7 @@ export default {
       return least;
     },
     toggleseat: function(){
-      if(this.isgorob || this.isnotegrab)
+      if(this.isgorob || this.isnotegrab || this.isStop)
         return
       this.openseat = !this.openseat;
     }
@@ -77,6 +80,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .unavilable .TrainBox,.unavilable .seats{
+    background-color: #eae8e8;
+    color: #999 !important;
+  }
   .cTime {
     color: #999;
     margin-top: 7px;
