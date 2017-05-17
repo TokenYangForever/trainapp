@@ -1,6 +1,6 @@
 <template>
-  <div class="trainDateInfo" @click="toggleseat()" :class="{unavilable: isStop}">
-    <div class="TrainBox">
+  <div class="trainDateInfo" :class="{unavilable: isStop}">
+    <div class="TrainBox" @click="toggleseat()">
       <div class="depart flex1">
         <div class="bTime">{{traindata.fmtime}}</div> 
         <div class="dStation">{{traindata.fmcity}}</div>
@@ -19,7 +19,7 @@
         <span class="adjust canRobTickets" v-else="isgorob||isnotegrab"><span class="money">{{this.getleast()}}</span>起</span>
       </div>
     </div>
-    <div class="seats" v-if="!openseat">
+    <div class="seats" @click="toggleseat()" v-if="!openseat">
       <span class="seat" v-if="isgorob">已售空，可抢票</span>
       <span class="seat" v-else-if="isStop">列车运行图调整</span>
       <span class="seat" v-else-if="isnotegrab">将于{{traindata.notetime}}起售</span>

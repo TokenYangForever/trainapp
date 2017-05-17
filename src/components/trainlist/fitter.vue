@@ -143,23 +143,18 @@ export default {
         this.confirmSelect()
       var byDtime = this.byDtime;
       var byTakingtime = this.byTakingtime;
-      if(byDtime){
-          this.fitterData.sort(function(a,b){
-            var result = byDtime == 1 ? a.fmtimeps - b.fmtimeps : b.fmtimeps - a.fmtimeps;
-            return result;
-          });
-          this.fitterChange();
-      }
-
-      if(byTakingtime){
-        this.fitterData.sort(function(a,b){
-          var result = byTakingtime == 1 ? a.usedtimeps - b.usedtimeps : b.usedtimeps - a.usedtimeps;
-          return result;
-        });
-        this.fitterChange();
-      }
+      this.initByDtime();
+      this.initByTakingtime();
     },
     byDtime: function(){
+      this.initByDtime();
+    },
+    byTakingtime: function(){
+      this.initByTakingtime();
+    }
+  },
+  methods: {
+    initByDtime: function(){
       var byDtime = this.byDtime;
           this.fitterData = this.traindataList;
       if(byDtime){
@@ -170,7 +165,7 @@ export default {
         this.fitterChange();
       }
     },
-    byTakingtime: function(){
+    initByTakingtime: function(){
       var byTakingtime = this.byTakingtime;
           this.fitterData = this.traindataList;
       if(byTakingtime){
@@ -180,9 +175,7 @@ export default {
         });
         this.fitterChange();
       }
-    }
-  },
-  methods: {
+    },
     openFitter: function(){
       this.openfitter = !this.openfitter;
     },
@@ -195,39 +188,35 @@ export default {
           fitFromstation = [],
           fitTostation = [],
           f_condition = this.f_condition;
-      for(let i=0,Ckey = Object.keys(f_condition[0]); i<Ckey.length;i++){
-        if(f_condition[0][Ckey[i]]){
-          if(Ckey[i] == "高铁(G/C)"){
+      Object.keys(f_condition[0]).forEach(function(val){
+        if(f_condition[0][val]){
+          if(val == "高铁(G/C)"){
             fitType.push("GD");
-          }else if(Ckey[i] == "普通(K/T/Z)"){
+          }else if(val == "普通(K/T/Z)"){
             fitType.push("KS","Z","PK","KT");
-          }else if(Ckey[i] == "动车(D)"){
+          }else if(val == "动车(D)"){
             fitType.push("D");
           }else{
             fitType.push("PK")
           }
         }
-      }
-      for(let i=0,Ckey = Object.keys(f_condition[1]); i<Ckey.length;i++){
-        if(f_condition[1][Ckey[i]]){
-          fitFromtime.push(Ckey[i].replace(/:/g,"").split('-'));     
-        }
-      }
-      for(let i=0,Ckey = Object.keys(f_condition[2]); i<Ckey.length;i++){
-        if(f_condition[2][Ckey[i]]){
-          fitTotime.push(Ckey[i].replace(/:/g,"").split('-'));     
-        }
-      }
-      for(let i=0,Ckey = Object.keys(f_condition[3]); i<Ckey.length;i++){
-        if(f_condition[3][Ckey[i]]){
-          fitFromstation.push(Ckey[i]);     
-        }
-      }
-      for(let i=0,Ckey = Object.keys(f_condition[4]); i<Ckey.length;i++){
-        if(f_condition[4][Ckey[i]]){
-          fitTostation.push(Ckey[i]);     
-        }
-      }
+      });
+      Object.keys(f_condition[1]).forEach(function(val){
+        if(f_condition[1][val])
+          fitFromtime.push(val.replace(/:/g,"").split('-'));
+      });
+      Object.keys(f_condition[2]).forEach(function(val){
+        if(f_condition[2][val])
+          fitTotime.push(val.replace(/:/g,"").split('-'));
+      });
+      Object.keys(f_condition[3]).forEach(function(val){
+        if(f_condition[3][val])
+          fitFromstation.push(val);     
+      });
+      Object.keys(f_condition[4]).forEach(function(val){
+        if(f_condition[4][val])
+          fitTostation.push(val);     
+      });
       newList = this.fitterByType(newList,fitType,fitFromtime,fitTotime,fitFromstation,fitTostation)
       this.fitterData = newList;
       this.fitterChange();
@@ -241,8 +230,14 @@ export default {
         }
         if(totimeList.length){
           var toflag = false;
+          //这里用foreach无法跳出循环
+          // totimeList.forEach(function(val,index){
+          //   if(trainlist[i].totimeps-val[0]>0&&val[1]-trainlist[i].totimeps>0){
+          //     toflag = true;
+          //   }
+          // });
           for(let j=0;j<totimeList.length;j++){
-            if(trainlist[i].totimeps>parseInt(totimeList[j][0])&&trainlist[i].totimeps<parseInt(totimeList[j][1])){
+            if(trainlist[i].totimeps - totimeList[j][0]>0&&trainlist[i].totimeps - totimeList[j][1]<0){
               toflag = true;
               break;
             }
@@ -253,7 +248,7 @@ export default {
         if(fromtimelist.length){
           var toflag = false;
           for(let j=0;j<fromtimelist.length;j++){
-            if(trainlist[i].fmtimeps>parseInt(fromtimelist[j][0])&&trainlist[i].fmtimeps<parseInt(fromtimelist[j][1])){
+            if(trainlist[i].fmtimeps - fromtimelist[j][0]>0&&trainlist[i].fmtimeps - fromtimelist[j][1]<0){
               toflag = true;
               break;
             }
@@ -274,11 +269,11 @@ export default {
       return reList;
     },
     clearSelect: function(){
-      for(var i = 0;i<this.f_condition.length;i++){
-        for(var j in this.f_condition[i]){
-          this.f_condition[i][j] = false;
+      this.f_condition.forEach(function(val){
+        for(var j in val){
+          val[j] = false;
         }
-      }
+      });
     },
     hasSelect: function(){
       for(var i = 0;i<this.f_condition.length;i++){
