@@ -17,13 +17,23 @@
       </div>
     </div>
     <fitter 
-     v-if = "datatrainlist instanceof Array"
-     :traindataList = "datatrainlist"
-     :fmlist = "fmlist"
-     :tolist = "tolist"
-     :backlist = "backdatatrainlist"
-     :qkey = "qkey"
-     @trainlistChange = "trainlistChange"></fitter>
+      v-if = "datatrainlist instanceof Array"
+      :traindataList = "datatrainlist"
+      :fmlist = "fmlist"
+      :tolist = "tolist"
+      :backlist = "backdatatrainlist"
+      :qkey = "qkey"
+      @trainlistChange = "trainlistChange">
+     </fitter>
+    <tccalendar
+      :startDate = "tcCalendar.startDate"
+      :maxLength = "tcCalendar.maxLength"
+      :canbookLength = "tcCalendar.canbookLength"
+      :reserveText = "tcCalendar.reserveText"
+      :toptips = "tcCalendar.toptips"
+    >
+       
+    </tccalendar>
   </div>
 </transition>
 </template>
@@ -32,6 +42,7 @@
 import train from '@/components/trainlist/train'
 import vueLoading from 'vue-loading-template'
 import fitter from '@/components/trainlist/fitter'
+import tccalendar from '@/components/public/tccalendar'
 
 export default {
   name: 'trainlist',
@@ -48,7 +59,14 @@ export default {
         openfitter: false,
         begin: this.$route.params.date == this.$route.params.begin,
         end: this.$route.params.date == this.$route.params.end,
-        qkey:''//监听每次查询
+        qkey:'',//监听每次查询
+        tcCalendar:{
+          startDate:new Date().format('yyyy-MM-dd'),//开始日期
+          maxLength:75,//最大日期
+          canbookLength:30,//可约定日期
+          reserveText:"预订",
+          toptips:"因铁路局列车运行图调整，火车票预售期调整为30天，建议您提前预约抢票，开售自动抢票。"
+        }
       }
   },
   mounted () {
@@ -130,7 +148,8 @@ export default {
   components: {
     'traindatainfo':train,
     'vueLoading':vueLoading,
-    'fitter':fitter
+    'fitter':fitter,
+    'tccalendar':tccalendar
   }
   
 }

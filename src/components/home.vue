@@ -53,17 +53,17 @@ export default {
       clickChange: false,
       // 数据绑定
       calendar:{
-                show:false,
-                x:0,
-                y:0,
-                picker:"date",
-                type:"date",
-                begin:new Date().format("yyyy-MM-dd"),
-                end:new Date(new Date().getTime()+60*24*3600*1000).format("yyyy-MM-dd"),
-                sep:"-",
-                weeks:['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-                months:['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-                range:false
+        show:false,
+        x:0,
+        y:0,
+        picker:"date",
+        type:"date",
+        begin:new Date().format("yyyy-MM-dd"),
+        end:new Date(new Date().getTime()+60*24*3600*1000).format("yyyy-MM-dd"),
+        sep:"-",
+        weeks:['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+        months:['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+        range:false
       },
       showcalendar: false
     }
