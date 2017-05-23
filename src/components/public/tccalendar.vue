@@ -1,5 +1,5 @@
 <template>
-    <div class="C_wrap">
+    <div class="C_wrap" v-if='open'>
         <div class="C_tips">
             {{toptips}}
         </div>
@@ -16,7 +16,11 @@
             <div class="monthwrap" v-for= "montharr in days">
                 <div class="m_head">{{montharr.y}}年{{montharr.m}}月</div>
                 <div class="flexBox wek_Item" v-for="wekarr in montharr.dayarr">
-                    <div class="flex1 day_Item" v-for="dayI in wekarr" v-if="dayI.val!=-1" :class='{enable:dayI.enable,vacation:dayI.Vacation&&!dayI.enable}' >
+                    <div class="flex1 day_Item" 
+                    v-for="dayI in wekarr" 
+                    v-if="dayI.val!=-1" 
+                    :class='{enable:dayI.enable,vacation:dayI.Vacation&&!dayI.enable,select:dayI.Select}' 
+                    @click="chooseItem(montharr.y,montharr.m,dayI)">
                     {{dayI.val}}
                     <span v-if = "!dayI.enable&&dayI.yuyue" class='yytag'>{{reserveText}}</span>
                     </div>
@@ -30,8 +34,13 @@
     .day_Item.vacation{
         color: #3c6
     }
-    .day_Item{
-        position: relative;
+    .day_Item.select{
+        border-radius: 50%;
+        background-color: #09bb07;
+        color: #fff;
+        height: 50px;
+        width: 50px;
+        line-height: 50px;
     }
     .yytag{
         font-size: 12px;
@@ -47,10 +56,7 @@
     .day_Item.enable{
         color: #999
     }
-    .scroll{
-        height: 569px;
-        overflow: auto;
-    }
+    
     .monthwrap{
         background-color: #fff;
         padding-bottom: 10px;
@@ -64,12 +70,16 @@
     .C_wrap{
         width: 100%;
         height: 100%;
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
         z-index: 99;
     }
+    .scroll{
+        margin-top: 98px;
+    }
     .day_Item{
+        position: relative;
         background: #fff;
         height: 50px;
         line-height: 50px;
@@ -79,6 +89,7 @@
         font-weight: 400;
     }
     .C_tips{
+        position: fixed;
         text-align: left;
         padding: 8px 15px;
         line-height: 20.5px;
@@ -88,6 +99,8 @@
         z-index: 100
     }
     .C_weekHead{
+        position: fixed;
+        top: 56px;
         z-index: 100;
         display: block;
         margin: 0;
@@ -130,27 +143,53 @@ export default {
         toptips: {
             type: String,
             default: "顶部文案"
+        },
+        open: {
+            type: Boolean
+        },
+        selectDate: {
+            type: String
         }
     },
-    data () {
-        var sDate = new Date(this.startDate);
-        var year = this.startDate.split("-")[0];
-        var sday = parseInt(this.startDate.split("-")[2]);
-        var sMonth = parseInt(this.startDate.split("-")[1]);
-        var bookenddate = new Date(sDate.getTime() + this.maxLength*24*3600*1000);
-        var yuyuedate = new Date(sDate.getTime() + this.canbookLength*24*3600*1000); 
-        var yday = yuyuedate.getDate();
-        var yMonth = yuyuedate.getMonth()+1;
-        var eday = bookenddate.getDate();
-        var eMonth = bookenddate.getMonth()+1;
-        var monArr = [];
-        var days = [];
-        for(var i = sMonth;i<eMonth+1;i++){
-            var firstWek = new Date(year,i-1,1).getDay();
-            var maxDay = new Date(year,i,0).getDate();
-            var count = 1;
-            var modays = [];
-            for(var j = 0;j<5;j++){
+    data () {  
+        return {
+            days:[]
+        }
+    },
+    created() {
+    },
+    mounted (){
+        this.initDate()
+    },
+    updated (){
+    },
+    watch: {
+        selectDate (){
+            this.initDate()
+        }
+    },
+    methods: {
+        initDate (){
+            var sDate = new Date(this.startDate);
+            var year = this.startDate.split("-")[0];
+            var sday = parseInt(this.startDate.split("-")[2]);
+            var sMonth = parseInt(this.startDate.split("-")[1]);
+            var bookenddate = new Date(sDate.getTime() + this.maxLength*24*3600*1000);
+            var yuyuedate = new Date(sDate.getTime() + this.canbookLength*24*3600*1000); 
+            var yday = yuyuedate.getDate();
+            var yMonth = yuyuedate.getMonth()+1;
+            var eday = bookenddate.getDate();
+            var eMonth = bookenddate.getMonth()+1;
+            var selectMonth = parseInt(this.selectDate.split("-")[1]);
+            var selectDay = parseInt(this.selectDate.split("-")[2]);
+            var monArr = [];
+            var days = [];
+            for(var i = sMonth;i<eMonth+1;i++){
+                var firstWek = new Date(year,i-1,1).getDay();
+                var maxDay = new Date(year,i,0).getDate();
+                var count = 1;
+                var modays = [];
+                for(var j = 0;j<5;j++){
                 var wekday = []
                 for(var k = 0;k<7;k++){
                     if(j == 0 ){
@@ -174,26 +213,24 @@ export default {
                         wekday[k].yuyue = true;
                     if(k==0||k==6)
                         wekday[k].Vacation = true;
+
+                    if(i==selectMonth&&count==(selectDay+1)){
+                        wekday[k].Select = true;
+                    }
+                    
                 }
 
                 modays[j] = wekday;
+                }
+                days.push({dayarr:modays,y:year,m:i});
             }
-            days.push({dayarr:modays,y:year,m:i});
+            this.days = days;
+        },
+        chooseItem (y,m,d){
+            if(d.val&&!d.enable){
+                this.$emit('choosedate',"chooseCalendar",new Date(y,m-1,d.val).format('yyyy-MM-dd'));
+            }
         }
-        return {
-            monArr:monArr,
-            sDate:sDate,
-            bookenddate:bookenddate,
-            days:days
-        }
-    },
-    created() {
-    },
-    mounted (){
-    },
-    watch: {
-    },
-    methods: {
     }
 }
 </script>

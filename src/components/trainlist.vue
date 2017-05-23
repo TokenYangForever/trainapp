@@ -3,7 +3,7 @@
   <div id="trainlist">
     <div class="header flexBox">
       <div class="flex1 beforeday" @click="dateChange('beforeday')" :class="{noset:begin}"><em class="pre-arrow icon-train"></em>前一天</div>
-      <div class="flex1 choosedate">{{queryDate}}</div>
+      <div class="flex1 choosedate" @click="tcCalendar.open = true">{{queryDate}}</div>
       <div class="flex1 afterday" @click="dateChange('next')" :class="{noset:end}">后一天<em class="arrownext icon-train"></em></div>
     </div>
     <div class="trainlist">
@@ -26,11 +26,14 @@
       @trainlistChange = "trainlistChange">
      </fitter>
     <tccalendar
+      @choosedate="dateChange"
       :startDate = "tcCalendar.startDate"
       :maxLength = "tcCalendar.maxLength"
       :canbookLength = "tcCalendar.canbookLength"
       :reserveText = "tcCalendar.reserveText"
       :toptips = "tcCalendar.toptips"
+      :open = "tcCalendar.open"
+      :selectDate = "queryDate"
     >
        
     </tccalendar>
@@ -65,7 +68,8 @@ export default {
           maxLength:75,//最大日期
           canbookLength:30,//可约定日期
           reserveText:"预订",
-          toptips:"因铁路局列车运行图调整，火车票预售期调整为30天，建议您提前预约抢票，开售自动抢票。"
+          toptips:"因铁路局列车运行图调整，火车票预售期调整为30天，建议您提前预约抢票，开售自动抢票。",
+          open: false
         }
       }
   },
@@ -82,17 +86,23 @@ export default {
   updated () {
   },
   methods:{
-    dateChange: function(type){
+    dateChange: function(type,date){
       if(type=="next"){
         if(this.end)
           return
         this.queryDate = new Date(new Date(this.queryDate).getTime()+24*3600*1000).format('yyyy-MM-dd');
       }
-      else{
+      else if(type=="beforeday"){
         if(this.begin)
           return
         this.queryDate = new Date(new Date(this.queryDate).getTime()-24*3600*1000).format('yyyy-MM-dd');
+      }else{
+        this.tcCalendar.open = false;
+        this.queryDate = date;
       }
+    },
+    choosedate: function(date){
+      this.queryDate = date;
     },
     getAjax: function(){
       let _this = this,
