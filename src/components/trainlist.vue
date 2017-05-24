@@ -105,35 +105,28 @@ export default {
       this.queryDate = date;
     },
     getAjax: function(){
-      let _this = this,
-          ajaxdata = {
-          "from":_this.queryData.from,
-          "to":_this.queryData.to,
-          "oby":"0",
-          "date":this.queryDate,
-          "platId":501,
-          "requestType":4,
-          "headct":1,
-          "headus":1,
-          "headver":"2.14.0.2",
-          "isstu":false,
-          "headtime":1493112975746,
-          "OpenId":"oOCyauGWhshD9C0v9D1VXp9vy6aE",
-          "MemberId":"aCmbppvo8AloGHUDB68fxg=="
-          };
-      window.$.ajax({
-        url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
-        type: 'GET',
-        data:{
-          para:JSON.stringify(ajaxdata) 
-        },
-        timeout:  20000,
-        dataType: 'JSONP',
-        beforeSend: function(){
-          _this.showloading = true;
-        },
-        success: function (data) {
-          if(data&&data.status == 200){
+        let _this = this,
+            ajaxdata = {
+              "from":_this.queryData.from,
+              "to":_this.queryData.to,
+              "oby":"0",
+              "date":this.queryDate,
+              "platId":501,
+              "requestType":4,
+              "headct":1,
+              "headus":1,
+              "headver":"2.14.0.2",
+              "isstu":false,
+              "headtime":1493112975746,
+              "OpenId":"oOCyauGWhshD9C0v9D1VXp9vy6aE",
+              "MemberId":"aCmbppvo8AloGHUDB68fxg=="
+            };
+      let newScript = document.createElement("script");
+      newScript.src = 'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html?callback=handleRes&para='+JSON.stringify(ajaxdata);
+      document.body.insertBefore(newScript,document.body.firstChild);
+
+      window.handleRes = function (data) {//这里回调函数相当于success了
+        if(data&&data.status == 200){
             data = data.data;
             if(data.trainlist&&data.trainlist.length>0){
               _this.tolist = data.tolist;
@@ -144,12 +137,29 @@ export default {
             }else{
               _this.noresult = true;
             }
-          }
-        },
-        complete: function(){
-          _this.showloading = false;
         }
-      });
+        _this.showloading = false;
+        document.body.removeChild(document.body.firstChild);
+      }
+      
+      // window.$.ajax({
+      //   url:'http://wx.17u.cn/wxuniontraintest/trainapi/searchno.html',
+      //   type: 'GET',
+      //   data:{
+      //     para:JSON.stringify(ajaxdata) 
+      //   },
+      //   timeout:  20000,
+      //   dataType: 'JSONP',
+      //   beforeSend: function(){
+      //     _this.showloading = true;
+      //   },
+      //   success: function (data) {
+          
+      //   },
+      //   complete: function(){
+      //     _this.showloading = false;
+      //   }
+      // });
     },
     trainlistChange: function(data){
       this.datatrainlist = data;
