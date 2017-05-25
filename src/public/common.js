@@ -1,4 +1,3 @@
-//基于原生
 Date.prototype.format = function(b) {
     var c = {
         "M+": this.getMonth() + 1,
@@ -24,33 +23,68 @@ Date.getWeek = function(a) {
     this.aWeek = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
     return this.aWeek[a]
 }
-/**
- * storage操作
- * SetStorage方法：设置存储storage的key和value值，如果storage存储失败，则将数据存储在cookie中
- * GetStorage方法：根据key值获取storage相对应的value值，获取失败则从cookie中获取，
- */
 
 var commonJs = {
     StorageHelp:{
-        SetSessionStorage: function(e,g){
+        SetLocalStorage: function(e,g){
             if(window.localStorage){
                 localStorage.setItem(e, g);
             }else{//存储cookie
-    
+                this.setCookie(e,g)
+            }
+        },
+        SetSessionStorage: function(e,g){
+            if(window.sessionStorage){
+                localStorage.setItem(e, g);
+            }else{//存储cookie
+                this.setCookie(e,g)
+            }
+        },
+        GetLocalStorage: function(d){
+            if(window.localStorage){
+                return localStorage.getItem(d);
+            }else{
+                return getCookie(d)
             }
         },
         GetSessionStorage: function(d){
-            if(window.localStorage){
+            if(window.sessionStorage){
                 return localStorage.getItem(d);
+            }else{
+                return getCookie(d)
             }
         },
         ClearSessionStorage:function(arr){
-            if(arr.length){
+            if(arr.length && window.sessionStorage){
                 for(var i=0;i<arr.length;i++){
                     sessionStorage.removeItem(arr[i]);
                 }
             }
-            
+        },
+        ClearLocalStorage:function(arr){
+            if(arr.length && window.localStorage){
+                for(var i=0;i<arr.length;i++){
+                    localStorage.removeItem(arr[i]);
+                }
+            }
+        },
+        setCookie: function(key,val,eday){
+            let exdate = new Date();
+                eday = eday || 30;
+            exdate.setDate(exdate.getDate()+eday);
+            document.cookie = key+ "=" + escape(val) + ";expires="+ exdate.toGMTString()
+        },
+        getCookie: function(key){
+           let cookiearr = document.cookie.split("; ");
+           for(let j in cookiearr){
+                let cookieite = cookiearr[j].split('=');
+                if(cookieite[0] == key)
+                    return cookieite[1]
+                
+           }
+        },
+        clearCookie: function(key){
+            this.setCookie(key,'',-1)
         }
     },
     getRequest: function(){
